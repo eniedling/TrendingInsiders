@@ -24,7 +24,6 @@ Fundamental500 <- function() {
   return(dfFundamental500)
 }
 
-
 InsiderScreening <- function() {
   
   require(rvest)
