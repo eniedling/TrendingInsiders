@@ -24,6 +24,26 @@ Fundamental500 <- function() {
   return(dfFundamental500)
 }
 
+FundamentalTechnical <- function() {
+  
+  require(rvest)
+  require(XML)
+  # scrape Stock Screener result:
+  # - EPS growth next 5 years > 10%
+  # - Return on Equity        > 10%
+  # - Sales growth past 5 years > 10%
+  # - Insider Transactions    > 0%
+  # - EPS growth this year    > 10%
+  # - EPS growth QoQ          > 0%
+  # - EPS growth next year    > 10%
+  
+  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa"
+  
+  # extract list from html table data  
+  dfFundTech <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  return(dfFundTech)
+}
+
 InsiderScreening <- function() {
   
   require(rvest)
