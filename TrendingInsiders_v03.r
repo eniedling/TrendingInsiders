@@ -165,4 +165,4 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
 
 watchList <- InsiderScreening()
 TradeAction(watchList)
-#blub
+#bluber
