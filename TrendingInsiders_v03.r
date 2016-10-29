@@ -168,4 +168,4 @@ TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB")
 
-#round three
+#round two
