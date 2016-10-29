@@ -170,3 +170,4 @@ TradeAction(watchList)
 # PriceData <- GetPriceSeries("SFM")
 # barChart(PriceData)
 # addSAR()
+# test
