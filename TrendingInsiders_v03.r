@@ -165,9 +165,3 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
 
 watchList <- InsiderScreening()
 TradeAction(watchList)
-
-## SFM - Sprouts Farmers Market to be closed - SAR
-# PriceData <- GetPriceSeries("SFM")
-# barChart(PriceData)
-# addSAR()
-# test
