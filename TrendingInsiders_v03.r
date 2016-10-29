@@ -166,3 +166,5 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
 watchList <- InsiderScreening()
 TradeAction(watchList)
 #bluber
+
+Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB") 
