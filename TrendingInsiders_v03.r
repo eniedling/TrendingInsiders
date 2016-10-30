@@ -105,6 +105,7 @@ MarketFilter <- function() {
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
 GetPriceSeries <- function(TickerSymbol) {
+## 2016-10-30: Changed SMA to adjusted price instead of close  
   
   startDate <- Sys.Date() - 300  
   options("getSymbols.warning4.0"=FALSE)
@@ -112,11 +113,11 @@ GetPriceSeries <- function(TickerSymbol) {
                 from = startDate,
                 auto.assign = FALSE) 
 
-SMA10 <- SMA(PriceSerie[,4],n=10)
+SMA10 <- SMA(PriceSerie[,6],n=10)
 sma10 <- data.frame(SMA10)
 colnames(sma10) = c("SMA10")
 
-SMA20 <- SMA(PriceSerie[,4],n=20)
+SMA20 <- SMA(PriceSerie[,6],n=20)
 sma20 <- data.frame(SMA20)
 colnames(sma20) = c("SMA20")
 
@@ -138,18 +139,19 @@ return(data)
 # Entry: SMA10 > SMA20, last close above PSAR and Market trending up
 # Exit:  SMA10 < SMA20 or last close below PSAR (to add: last close below StopLoss (2*ATR))
 BuyOrSell <- function(PriceSeries) {
-
+## 2016-10-30: Changed comparison to adjusted price instead of close  
+  
   {vAction = "blank"}
   
   lastRecord = tail(PriceSeries,1)
   
-  if  ( ( lastRecord[,4] < lastRecord$SAR.SAR )  |    # Price below PSAR
+  if  ( ( lastRecord[,6] < lastRecord$SAR.SAR )  |    # Price below PSAR
         ( lastRecord$SMA10 < lastRecord$SMA20 ) )     # short below long
         
   { vAction = "Sell" }
   
   else if ( MarketFilter() &                         # Market is trending up
-             lastRecord[,4] > lastRecord$SAR.SAR  &   # Price above PSAR
+             lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
              lastRecord$SMA10 > lastRecord$SMA20 )    # Short above long
      {vAction = "Buy"}
     
