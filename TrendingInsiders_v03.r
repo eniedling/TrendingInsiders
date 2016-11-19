@@ -155,7 +155,7 @@ BuyOrSell <- function(PriceSeries) {
              lastRecord$SMA10 > lastRecord$SMA20 )    # Short above long
      {vAction = "Buy"}
     
-  else {vAction = "Oops"}
+  else {vAction = "Hold"}
   
   return(vAction)
   
@@ -190,4 +190,6 @@ TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB")
 
-#round two
+#Open items
+# - Insider screening yields more than 20 hits?
+# - Buy opportunities exceed available capital. How to prioritize?
