@@ -193,3 +193,4 @@ Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","S
 #Open items
 # - Insider screening yields more than 20 hits?
 # - Buy opportunities exceed available capital. How to prioritize?
+# - Portfolio function: tracking buy/hold/sell signal after stock leaves tracking list
