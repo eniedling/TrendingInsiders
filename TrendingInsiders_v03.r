@@ -40,7 +40,16 @@ FundamentalTechnical <- function() {
   url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa"
   
   # extract list from html table data  
-  dfFundTech <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  dfFundTech <- newHits
+  pageCounter <- 1
+  while ( length(newHits) > 19 )  {
+    pageCounter <- pageCounter + 20
+    urlMore <- paste(url,"&r=",pageCounter,sep="")
+    newHits <- urlMore %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+    dfFundTech <- c(dfFundTech,newHits)    
+      }
+  
   return(dfFundTech)
 }
 
@@ -60,7 +69,15 @@ InsiderScreening <- function() {
   url <- "http://finviz.com/screener.ashx?v=111&f=fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_sales5years_o10,sh_insidertrans_pos&ft=2"
 
 # extract list from html table data  
-  InsiderTraded <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  InsiderTraded <- newHits
+  pageCounter <- 1
+  while ( length(newHits) > 19 )  {
+    pageCounter <- pageCounter + 20
+    urlMore <- paste(url,"&r=",pageCounter,sep="")
+    newHits <- urlMore %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+    InsiderTraded <- c(InsiderTraded,newHits)    
+  }
   return(InsiderTraded)
 }
 
