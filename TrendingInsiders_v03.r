@@ -40,7 +40,16 @@ FundamentalTechnical <- function() {
   url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa"
   
   # extract list from html table data  
-  dfFundTech <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  dfFundTech <- newHits
+  pageCounter <- 1
+  while ( length(newHits) > 19 )  {
+    pageCounter <- pageCounter + 20
+    urlMore <- paste(url,"&r=",pageCounter,sep="")
+    newHits <- urlMore %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+    dfFundTech <- c(dfFundTech,newHits)    
+      }
+  
   return(dfFundTech)
 }
 
@@ -60,7 +69,15 @@ InsiderScreening <- function() {
   url <- "http://finviz.com/screener.ashx?v=111&f=fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_sales5years_o10,sh_insidertrans_pos&ft=2"
 
 # extract list from html table data  
-  InsiderTraded <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  InsiderTraded <- newHits
+  pageCounter <- 1
+  while ( length(newHits) > 19 )  {
+    pageCounter <- pageCounter + 20
+    urlMore <- paste(url,"&r=",pageCounter,sep="")
+    newHits <- urlMore %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+    InsiderTraded <- c(InsiderTraded,newHits)    
+  }
   return(InsiderTraded)
 }
 
@@ -105,6 +122,7 @@ MarketFilter <- function() {
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
 GetPriceSeries <- function(TickerSymbol) {
+## 2016-10-30: Changed SMA to adjusted price instead of close  
   
   startDate <- Sys.Date() - 300  
   options("getSymbols.warning4.0"=FALSE)
@@ -112,11 +130,11 @@ GetPriceSeries <- function(TickerSymbol) {
                 from = startDate,
                 auto.assign = FALSE) 
 
-SMA10 <- SMA(PriceSerie[,4],n=10)
+SMA10 <- SMA(PriceSerie[,6],n=10)
 sma10 <- data.frame(SMA10)
 colnames(sma10) = c("SMA10")
 
-SMA20 <- SMA(PriceSerie[,4],n=20)
+SMA20 <- SMA(PriceSerie[,6],n=20)
 sma20 <- data.frame(SMA20)
 colnames(sma20) = c("SMA20")
 
@@ -138,22 +156,23 @@ return(data)
 # Entry: SMA10 > SMA20, last close above PSAR and Market trending up
 # Exit:  SMA10 < SMA20 or last close below PSAR (to add: last close below StopLoss (2*ATR))
 BuyOrSell <- function(PriceSeries) {
-
+## 2016-10-30: Changed comparison to adjusted price instead of close  
+  
   {vAction = "blank"}
   
   lastRecord = tail(PriceSeries,1)
   
-  if  ( ( lastRecord[,4] < lastRecord$SAR.SAR )  |    # Price below PSAR
+  if  ( ( lastRecord[,6] < lastRecord$SAR.SAR )  |    # Price below PSAR
         ( lastRecord$SMA10 < lastRecord$SMA20 ) )     # short below long
         
   { vAction = "Sell" }
   
   else if ( MarketFilter() &                         # Market is trending up
-             lastRecord[,4] > lastRecord$SAR.SAR  &   # Price above PSAR
+             lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
              lastRecord$SMA10 > lastRecord$SMA20 )    # Short above long
      {vAction = "Buy"}
     
-  else {vAction = "Oops"}
+  else {vAction = "Hold"}
   
   return(vAction)
   
@@ -188,4 +207,7 @@ TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB","ATVI","NVDA","TDG","UA")
 
-#round two
+#Open items
+# - Insider screening yields more than 20 hits?
+# - Buy opportunities exceed available capital. How to prioritize?
+# - Portfolio function: tracking buy/hold/sell signal after stock leaves tracking list
