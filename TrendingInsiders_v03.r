@@ -208,7 +208,7 @@ TradeAction(watchList)
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB","ATVI","MKC","NCR","QGEN")
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
 
-myStocks <- c("ATVI","ADS","FB","ILMN","TSLA","ULTA")
+myStocks <- c("ATVI","ADS","FB","ILMN","TSLA","ULTA","NCLH")
 
 #Open items
 # - Insider screening yields more than 20 hits?  done?
