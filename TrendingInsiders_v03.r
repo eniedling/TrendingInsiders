@@ -24,6 +24,36 @@ Fundamental500 <- function() {
   return(dfFundamental500)
 }
 
+#http://www.finviz.com/screener.ashx?v=111&f=fa_epsqoq_pos,fa_epsyoy_pos,fa_estltgrowth_pos,sh_avgvol_o200,ta_sma200_pa,ta_sma50_pb&ft=3
+WA_ST_LONG <- function() {
+  
+  require(rvest)
+  require(XML)
+  # scrape Stock Screener result:
+  # - EPS growth next 5 years > 10%
+  # - Return on Equity        > 10%
+  # - Sales growth past 5 years > 10%
+  # - Insider Transactions    > 0%
+  # - EPS growth this year    > 10%
+  # - EPS growth QoQ          > 0%
+  # - EPS growth next year    > 10%
+  
+  url <- "http://www.finviz.com/screener.ashx?v=111&f=fa_epsqoq_pos,fa_epsyoy_pos,fa_estltgrowth_pos,sh_avgvol_o200,ta_sma200_pa,ta_sma50_pb"
+  
+  # extract list from html table data  
+  newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+  dfFundTech <- newHits
+  pageCounter <- 1
+  while ( length(newHits) > 19 )  {
+    pageCounter <- pageCounter + 20
+    urlMore <- paste(url,"&r=",pageCounter,sep="")
+    newHits <- urlMore %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
+    dfFundTech <- c(dfFundTech,newHits)    
+  }
+  
+  return(dfFundTech)
+}
+
 FundamentalTechnical <- function() {
   
   require(rvest)
@@ -201,15 +231,16 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
   } # for (i in 1:nrStocks)
 } # end function
 
-
+print("Insider check:")
 watchList <- InsiderScreening()
 TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB","ATVI","MKC","NCR","QGEN")
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
 
-myStocks <- c("ATVI","ADS","FB","ILMN","TSLA","ULTA","NCLH")
-
+print("myStocks check:")
+myStocks <- c("ATVI","FB","VIVO","RH","CYTK","NCLH","STZ")
+TradeAction(myStocks)
 #Open items
 # - Insider screening yields more than 20 hits?  done?
 # - Buy opportunities exceed available capital. How to prioritize?
