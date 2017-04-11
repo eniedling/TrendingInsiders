@@ -126,7 +126,7 @@ MarketFilter <- function() {
   
   require(quantmod)
   
-  startDate <- Sys.Date() - 180
+  startDate <- Sys.Date() - 300
   options("getSymbols.warning4.0"=FALSE)
   SP500 <- getSymbols(Symbols = "^GSPC",
                       from = startDate,
@@ -155,7 +155,7 @@ GetPriceSeries <- function(TickerSymbol) {
 ## 2016-10-30: Changed SMA to adjusted price instead of close  
 ## 2017-04-04: added EMA20/40
     
-  startDate <- Sys.Date() - 180  
+  startDate <- Sys.Date() - 300  
   options("getSymbols.warning4.0"=FALSE)
   PriceSerie <- getSymbols(Symbols = TickerSymbol,
                 from = startDate,
@@ -194,8 +194,12 @@ MACD_BuySell <- df_MACD$signal - df_MACD$macd
 df_MACD <- cbind(df_MACD, MACD_BuySell)
 colnames(df_MACD) = c("macd","signal","MACD_BuySell")
 
-#data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40, df_MACD$MACD_BuySell)
-data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40)
+data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40, df_MACD$MACD_BuySell)
+#data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40)
+CNames <- colnames(data)
+CNames[13] <- 'MACD_BuySell'
+colnames(data) <- CNames
+
 return(data) 
 }
 
@@ -218,8 +222,8 @@ BuyOrSell <- function(PriceSeries) {
   else if ( MarketFilter() &                         # Market is trending up
              lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
              lastRecord$SMA10 > lastRecord$SMA20  &    # Short above long
-             lastRecord$EMA20 > lastRecord$EMA40 )  #&    # Short above long
-        #     lastRecord$MACD_BuySell > 0 )            # MACD cross over
+             lastRecord$EMA20 > lastRecord$EMA40   &    # Short above long
+             lastRecord$MACD_BuySell > 0 )            # MACD cross over
      {vAction = "Buy"}
     
   else {vAction = "Hold"}
