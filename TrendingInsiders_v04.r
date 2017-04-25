@@ -67,8 +67,9 @@ FundamentalTechnical <- function() {
   # - EPS growth QoQ          > 0%
   # - EPS growth next year    > 10%
   
-  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa"
-  
+  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
+  #http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o5,fa_roi_o5,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4
+  #old: http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa 
   # extract list from html table data  
   newHits <- url %>% read_html() %>% html_nodes(css = '.screener-link-primary') %>% html_text()
   dfFundTech <- newHits
@@ -113,7 +114,7 @@ InsiderScreening <- function() {
 
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
-PositionSize <- function(ATRvalue, portfolioSize = 1600, riskFactor = 0.01 ) {
+PositionSize <- function(ATRvalue, portfolioSize = 1500, riskFactor = 0.010 ) {
   
   posSize <- round( ( portfolioSize *  riskFactor) / ( 2 * ATRvalue ) )
   return(posSize)
@@ -126,7 +127,7 @@ MarketFilter <- function() {
   
   require(quantmod)
   
-  startDate <- Sys.Date() - 180
+  startDate <- Sys.Date() - 300
   options("getSymbols.warning4.0"=FALSE)
   SP500 <- getSymbols(Symbols = "^GSPC",
                       from = startDate,
@@ -155,7 +156,7 @@ GetPriceSeries <- function(TickerSymbol) {
 ## 2016-10-30: Changed SMA to adjusted price instead of close  
 ## 2017-04-04: added EMA20/40
     
-  startDate <- Sys.Date() - 180  
+  startDate <- Sys.Date() - 300  
   options("getSymbols.warning4.0"=FALSE)
   PriceSerie <- getSymbols(Symbols = TickerSymbol,
                 from = startDate,
@@ -188,14 +189,18 @@ EMA40 <- EMA(PriceSerie[,6],n=40)
 ema40 <- data.frame(EMA40)
 colnames(ema40) = c("EMA40")
 
-MACD <- MACD( PriceSerie[,6], 12, 26, 9, maType="EMA" )
+MACD <- MACD( PriceSerie[,6], 12, 26, 9, maType="SMA" )
 df_MACD <- data.frame(MACD)
 MACD_BuySell <- df_MACD$signal - df_MACD$macd
 df_MACD <- cbind(df_MACD, MACD_BuySell)
 colnames(df_MACD) = c("macd","signal","MACD_BuySell")
 
-#data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40, df_MACD$MACD_BuySell)
-data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40)
+data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40, df_MACD$MACD_BuySell)
+#data = data.frame(PriceSerie,sma10,sma20,ATR14$atr,SAR$SAR, ema20, ema40)
+CNames <- colnames(data)
+CNames[13] <- 'MACD_BuySell'
+colnames(data) <- CNames
+
 return(data) 
 }
 
@@ -218,8 +223,9 @@ BuyOrSell <- function(PriceSeries) {
   else if ( MarketFilter() &                         # Market is trending up
              lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
              lastRecord$SMA10 > lastRecord$SMA20  &    # Short above long
-             lastRecord$EMA20 > lastRecord$EMA40 )  #&    # Short above long
-        #     lastRecord$MACD_BuySell > 0 )            # MACD cross over
+             lastRecord$EMA20 > lastRecord$EMA40   &    # Short above long
+             lastRecord$MACD_BuySell > 0 &
+             lastRecord[,6] > lastRecord$SMA10 )            # MACD cross over
      {vAction = "Buy"}
     
   else {vAction = "Hold"}
@@ -253,15 +259,10 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
 
 print("Insider check:")
 watchList <- InsiderScreening()
-print("Insider alerts:")
 TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB","ATVI","MKC","NCR","QGEN")
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
-wL2 <- c("ATVI","TSLA","PYPL","AGN","RHT")
-
-print("My stocks:")
-TradeAction(wL2)
 
 print("myStocks check:")
 myStocks <- c("ATVI","FB","VIVO","RH","CYTK","NCLH","STZ")
