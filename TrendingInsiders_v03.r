@@ -83,7 +83,7 @@ InsiderScreening <- function() {
 
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
-PositionSize <- function(ATRvalue, portfolioSize = 1500, riskFactor = 0.010 ) {
+PositionSize <- function(ATRvalue, portfolioSize = 1600, riskFactor = 0.01 ) {
   
   posSize <- round( ( portfolioSize *  riskFactor) / ( 2 * ATRvalue ) )
   return(posSize)
@@ -203,10 +203,15 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
 
 
 watchList <- InsiderScreening()
+print("Insider alerts:")
 TradeAction(watchList)
 
 Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","SIVB","ATVI","MKC","NCR","QGEN")
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
+wL2 <- c("ATVI","TSLA","PYPL","AGN","RHT")
+
+print("My stocks:")
+TradeAction(wL2)
 
 #Open items
 # - Insider screening yields more than 20 hits?  done?
