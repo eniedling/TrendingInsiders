@@ -265,7 +265,7 @@ Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","S
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
 
 print("myStocks check:")
-myStocks <- c("ATVI","FB","VIVO","RH","CYTK","NCLH","STZ")
+myStocks <- c("ATVI","FB","MEET","APO","ECL","GNTX","STZ","SPWH")
 TradeAction(myStocks)
 #Open items
 # - Insider screening yields more than 20 hits?  done?
