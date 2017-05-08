@@ -67,7 +67,7 @@ FundamentalTechnical <- function() {
   # - EPS growth QoQ          > 0%
   # - EPS growth next year    > 10%
   
-  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_o10,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_peg_u3,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,sh_price_o10,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
+  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_o10,fa_epsyoy_pos,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,sh_price_o10,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
   #http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
   #http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o5,fa_roi_o5,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4
   #old: http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa 
