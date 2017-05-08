@@ -67,7 +67,8 @@ FundamentalTechnical <- function() {
   # - EPS growth QoQ          > 0%
   # - EPS growth next year    > 10%
   
-  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
+  url <- "http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_o10,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_peg_u3,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,sh_price_o10,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
+  #http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4"
   #http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o5,fa_roi_o5,fa_sales5years_o10,sh_avgvol_o200,ta_sma20_pa,ta_sma50_pa,targetprice_above&ft=4
   #old: http://finviz.com/screener.ashx?v=111&f=fa_eps5years_o10,fa_epsqoq_pos,fa_epsyoy_o10,fa_epsyoy1_o10,fa_estltgrowth_o10,fa_roe_o10,fa_roi_o10,fa_sales5years_o10,ta_sma20_pa,ta_sma50_pa 
   # extract list from html table data  
@@ -220,8 +221,8 @@ BuyOrSell <- function(PriceSeries) {
         
   { vAction = "Sell" }
   
-  else if ( MarketFilter() &                         # Market is trending up
-             lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
+#  else if ( MarketFilter() &                         # Market is trending up
+   else if ( lastRecord[,6] > lastRecord$SAR.SAR  &   # Price above PSAR
              lastRecord$SMA10 > lastRecord$SMA20  &    # Short above long
              lastRecord$EMA20 > lastRecord$EMA40   &    # Short above long
              lastRecord$MACD_BuySell > 0 &
@@ -266,7 +267,7 @@ Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
 
 print("myStocks check:")
 myStocks <- c("ATVI","FB","MEET","APO","ECL","GNTX","STZ","SPWH")
-TradeAction(myStocks)
+#TradeAction(myStocks)
 #Open items
 # - Insider screening yields more than 20 hits?  done?
 # - Buy opportunities exceed available capital. How to prioritize?
