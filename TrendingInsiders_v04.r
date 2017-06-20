@@ -136,7 +136,7 @@ InsiderScreening <- function() {
 
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
-PositionSize <- function(ATRvalue, portfolioSize = 1500, riskFactor = 0.010 ) {
+PositionSize <- function(ATRvalue, portfolioSize = 5400, riskFactor = 0.010 ) {
   
   posSize <- round( ( portfolioSize *  riskFactor) / ( 2 * ATRvalue ) )
   return(posSize)
