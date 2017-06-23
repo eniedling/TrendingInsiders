@@ -136,7 +136,7 @@ InsiderScreening <- function() {
 
 
 # Function to determine position sizing based on ATR, portfolio size (default 10k USD) and risk factor 1%
-PositionSize <- function(ATRvalue, portfolioSize = 5400, riskFactor = 0.010 ) {
+PositionSize <- function(ATRvalue, portfolioSize = 1500, riskFactor = 0.010 ) {
   
   posSize <- round( ( portfolioSize *  riskFactor) / ( 2 * ATRvalue ) )
   return(posSize)
@@ -262,21 +262,24 @@ TradeAction <- function(ListOfSymbols, BuyOnly = FALSE ) {
   
   require(quantmod)
 
-  nrStocks <- length(ListOfSymbols)
+  #Filter faulty value...the bad way
+  ListOfSymbols2 <- ListOfSymbols[ListOfSymbols != "EFX"]
+  
+  nrStocks <- length(ListOfSymbols2)
 
   for (i in 1:nrStocks) {
   
-    StockPrices <- GetPriceSeries(ListOfSymbols[i])
+    StockPrices <- GetPriceSeries(ListOfSymbols2[i])
     vTradeAction <- BuyOrSell(StockPrices)
   
     vLastRecord <- tail(StockPrices,1)
   
     if ( vTradeAction == 'Buy'  ) 
     { 
-      LotSize <- PositionSize(vLastRecord[,9] )
-      print(paste(ListOfSymbols[i]," : ",vTradeAction,LotSize, sep = " ")) }
+      LotSize <- PositionSize(vLastRecord[,8] )
+      print(paste(ListOfSymbols2[i]," : ",vTradeAction,LotSize, sep = " ")) }
     else if ( BuyOnly == FALSE )
-    { print(paste(ListOfSymbols[i]," : ",vTradeAction, sep = " ")) }
+    { print(paste(ListOfSymbols2[i]," : ",vTradeAction, sep = " ")) }
   } # for (i in 1:nrStocks)
 } # end function
 
@@ -288,10 +291,9 @@ Fool_BestBuys <- c("BJRI","SAM","PYPL","SBUX","TXRH","GOOG","KMI","MAR","NKE","S
 Fool_BestBuys <- c(Fool_BestBuys,"AMG","CSTE","FB","MA","SHOP")
 
 print("myStocks check:")
-myStocks <- c("ATVI","FB","MEET","APO","ECL","GNTX","STZ","SPWH")
+myStocks <- c("ATVI","FB","SWKS","DY","JAZZ","MPWR","STZ","SUPN","SPY","PLAY")
 #TradeAction(myStocks)
 #Open items
 # - Insider screening yields more than 20 hits?  done?
 # - Buy opportunities exceed available capital. How to prioritize?
 # - Portfolio function: tracking buy/hold/sell signal after stock leaves tracking list
-# - blah blah
