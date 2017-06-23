@@ -272,3 +272,4 @@ myStocks <- c("ATVI","FB","MEET","APO","ECL","GNTX","STZ","SPWH")
 # - Insider screening yields more than 20 hits?  done?
 # - Buy opportunities exceed available capital. How to prioritize?
 # - Portfolio function: tracking buy/hold/sell signal after stock leaves tracking list
+# - blah blah
